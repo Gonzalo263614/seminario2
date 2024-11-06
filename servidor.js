@@ -16,7 +16,7 @@ const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     password: 'Contraseña2190.', // Usa tu contraseña
-    database: 'capacitacionDB'
+    database: 'cotizaciondb'
 });
 
 // CONEXION BASE DE DATOS
@@ -25,7 +25,7 @@ connection.connect((err) => {
         console.error('Error connecting to the database:', err);
         return;
     }
-    console.log('Connected to capacitacionDB');
+    console.log('Connected to cotizacionDB');
 });
 
 // Ruta raíz para mostrar "SERVIDOR CORRIENDO"
