@@ -1,8 +1,14 @@
 /* Estilos generales del formulario */
+.form-container {
+    background-color: #dadbd5;
+    padding: 10px;
+    margin-top: 0px; /* Ajusta este valor según la altura de tu navbar */
+}
+
 form {
     max-width: 600px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 30px;
     background-color: #f9f9f9;
     border-radius: 8px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);

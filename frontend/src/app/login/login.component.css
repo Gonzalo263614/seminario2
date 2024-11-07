@@ -1,16 +1,31 @@
 /* Estilos generales */
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #dadbd5;
+}
+
+.title {
+    font-size: 36px;
+    color: #007bff;
+    font-weight: bold;
+    margin-bottom: 40px; /* Espacio entre el título y el formulario */
+}
+
 .login-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    background-color: #f0f2f5;
+    width: 100%;
 }
 
 .login-box {
     width: 100%;
     max-width: 400px;
-    padding: 20px;
+    padding: 28px;
     background-color: #fff;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
