@@ -1,0 +1,38 @@
+<div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+
+<div *ngIf="!errorMessage" class="container">
+    <h2>Perfil de Usuario</h2>
+
+    <!-- Sección de Información del Usuario -->
+    <div class="profile-section">
+        <strong>Nombre:</strong>
+        <div>{{ user.nombre }} {{ user.apellido_paterno }} {{ user.apellido_materno }}</div>
+    </div>
+    <div class="profile-section">
+        <strong>RFC:</strong>
+        <div>{{ user.rfc }}</div>
+    </div>
+    <div class="profile-section">
+        <strong>CURP:</strong>
+        <div>{{ user.curp }}</div>
+    </div>
+    <div class="profile-section">
+        <strong>Correo:</strong>
+        <div>{{ user.correo }}</div>
+    </div>
+    <div class="profile-section">
+        <strong>Edad:</strong>
+        <div>{{ user.edad }}</div>
+    </div>
+    <div class="profile-section">
+        <strong>Teléfono:</strong>
+        <div>{{ user.telefono }}</div>
+    </div>
+    <div class="profile-section">
+        <strong>Rol:</strong>
+        <div>{{ user.rol }}</div>
+    </div>
+
+    <!-- Botón de editar perfil -->
+    <a href="javascript:void(0)" class="edit-button" (click)="editProfile()">Editar Perfil</a>
+</div>

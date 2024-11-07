@@ -1,0 +1,119 @@
+/* Contenedor principal */
+.container {
+    width: 85%;
+    margin: 30px auto;
+    padding: 40px;
+    background-color: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    transition: all 0.3s ease;
+}
+
+/* Sombra y animación en hover del contenedor */
+.container:hover {
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
+    transform: translateY(-5px);
+}
+
+/* Título */
+h2 {
+    font-size: 2.5rem;
+    text-align: center;
+    color: #1e3d58;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+/* Secciones del perfil */
+.profile-section {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding: 10px 0;
+    border-bottom: 2px solid #f0f0f0;
+    font-size: 1.1rem;
+}
+
+/* Etiquetas de las secciones */
+.profile-section strong {
+    color: #4CAF50;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+/* Valores de las secciones */
+.profile-section div {
+    color: #555;
+    font-weight: 400;
+    text-transform: capitalize;
+    word-wrap: break-word;
+    font-size: 1rem;
+}
+
+/* Mensaje de error */
+.error-message {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 15px;
+    margin-bottom: 30px;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* Botón de edición */
+.edit-button {
+    display: block;
+    width: 100%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 20px;
+    text-align: center;
+    border-radius: 50px;
+    text-decoration: none;
+    font-size: 1.2rem;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    margin-top: 40px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* Efecto hover para el botón */
+.edit-button:hover {
+    background-color: #45a049;
+    transform: translateY(-2px);
+}
+
+/* Hover sobre las secciones */
+.profile-section:hover {
+    background-color: #f9f9f9;
+    cursor: pointer;
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+    .container {
+        width: 95%;
+        padding: 20px;
+    }
+
+    h2 {
+        font-size: 2rem;
+    }
+
+    .profile-section {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .profile-section div {
+        font-size: 1rem;
+    }
+
+    .edit-button {
+        font-size: 1rem;
+    }
+}

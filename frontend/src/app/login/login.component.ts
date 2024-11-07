@@ -16,19 +16,20 @@ export class LoginComponent {
   login() {
     const loginData = { rfc: this.rfc, contrasena: this.contrasena };
     console.log('rfc', this.rfc, ", contra: ", this.contrasena);
-
+  
     this.http.post('http://localhost:3000/api/login', loginData).subscribe(
       (response: any) => {
         console.log('Inicio de sesión exitoso', response);
-
+  
         // Guardamos los datos del usuario en el localStorage
-        localStorage.setItem('user', JSON.stringify(response.user)); // Guardamos los datos del usuario
-
+        localStorage.setItem('user', JSON.stringify(response.user)); // Guardamos los datos completos del usuario
+        localStorage.setItem('userId', response.user.id); // Guardamos el id del usuario
+  
         // Accedemos al rol del usuario directamente
         const userRole = response.user.rol;
-
+  
         console.log('Rol recibido:', userRole);  // Verifica que el rol es correcto
-
+  
         // Redirigir al usuario dependiendo del rol
         if (userRole === 'administrador') {
           this.router.navigate(['/administrador']);
@@ -44,8 +45,7 @@ export class LoginComponent {
       }
     );
   }
-
-
+  
   redirectToRegister() {
     this.router.navigate(['/registro']);
   }

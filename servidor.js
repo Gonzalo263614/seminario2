@@ -93,39 +93,54 @@ app.post('/api/register', (req, res) => {
 //LOGIN
 app.post('/api/login', (req, res) => {
     const { rfc, contrasena } = req.body;
-  
+
     // Verifica que el RFC y la contraseña estén presentes
     if (!rfc || !contrasena) {
-      return res.status(400).json({ message: 'RFC y contraseña son obligatorios' });
+        return res.status(400).json({ message: 'RFC y contraseña son obligatorios' });
     }
-  
+
     // Busca al usuario por RFC
     const query = 'SELECT * FROM usuarios WHERE rfc = ?';
     connection.query(query, [rfc], (err, results) => {
-      if (err) {
-        console.error('Error al buscar usuario:', err);
-        return res.status(500).json({ message: 'Error en el servidor' });
-      }
-  
-      // Si no encuentra al usuario
-      if (results.length === 0 || results[0].contrasena !== contrasena) {
-        return res.status(401).json({ message: 'RFC o contraseña incorrectos' });
-      }
-  
-      const user = results[0];
-  
-      // Enviar los datos del usuario (rol, nombre, id) al frontend
-      res.json({
-        message: 'Inicio de sesión exitoso',
-        user: {
-          id: user.id,
-          nombre: user.nombre,
-          rol: user.rol,  // Aquí le enviamos el rol directamente
+        if (err) {
+            console.error('Error al buscar usuario:', err);
+            return res.status(500).json({ message: 'Error en el servidor' });
         }
-      });
+
+        // Si no encuentra al usuario
+        if (results.length === 0 || results[0].contrasena !== contrasena) {
+            return res.status(401).json({ message: 'RFC o contraseña incorrectos' });
+        }
+
+        const user = results[0];
+
+        // Enviar los datos del usuario (rol, nombre, id) al frontend
+        res.json({
+            message: 'Inicio de sesión exitoso',
+            user: {
+                id: user.id,
+                nombre: user.nombre,
+                rol: user.rol,  // Aquí le enviamos el rol directamente
+            }
+        });
     });
-  });
-  
+});
+
+// Ruta en Express para obtener los datos del usuario por id
+app.get('/api/usuarios/:id', (req, res) => {
+    const userId = req.params.id;
+    // Realiza la consulta a la base de datos para obtener los datos del usuario
+    connection.query('SELECT * FROM usuarios WHERE id = ?', [userId], (err, results) => {
+        if (err) {
+            return res.status(500).send('Error al obtener los datos');
+        }
+        if (results.length > 0) {
+            res.json(results[0]);  // Devuelve los datos del primer usuario encontrado
+        } else {
+            res.status(404).send('Usuario no encontrado');
+        }
+    });
+});
 
 // Iniciar el servidor en el puerto 3000
 const PORT = 3000;
