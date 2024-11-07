@@ -1,0 +1,75 @@
+<div class="form-container">
+    <h2>Registro de Usuario</h2>
+    <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
+        <div>
+            <label for="nombre">Nombre:</label>
+            <input id="nombre" formControlName="nombre" type="text" required />
+            <div *ngIf="registerForm.controls['nombre'].invalid && registerForm.controls['nombre'].touched"
+                class="invalid-feedback">
+                Nombre es obligatorio.
+            </div>
+        </div>
+
+        <div>
+            <label for="apellido_paterno">Apellido Paterno:</label>
+            <input id="apellido_paterno" formControlName="apellido_paterno" type="text" required />
+            <div *ngIf="registerForm.controls['apellido_paterno'].invalid && registerForm.controls['apellido_paterno'].touched"
+                class="invalid-feedback">
+                Apellido paterno es obligatorio.
+            </div>
+        </div>
+
+        <div>
+            <label for="apellido_materno">Apellido Materno:</label>
+            <input id="apellido_materno" formControlName="apellido_materno" type="text" />
+        </div>
+
+        <div>
+            <label for="rfc">RFC:</label>
+            <input id="rfc" formControlName="rfc" type="text" maxlength="13" required />
+            <div *ngIf="registerForm.controls['rfc'].invalid && registerForm.controls['rfc'].touched"
+                class="invalid-feedback">
+                RFC es obligatorio y debe tener 13 caracteres.
+            </div>
+        </div>
+
+        <div>
+            <label for="curp">CURP:</label>
+            <input id="curp" formControlName="curp" type="text" maxlength="18" required />
+        </div>
+
+        <div>
+            <label for="correo">Correo:</label>
+            <input id="correo" formControlName="correo" type="email" required />
+            <div *ngIf="registerForm.controls['correo'].invalid && registerForm.controls['correo'].touched"
+                class="invalid-feedback">
+                Debe ingresar un correo válido.
+            </div>
+        </div>
+
+        <div>
+            <label for="contrasena">Contraseña:</label>
+            <input id="contrasena" formControlName="contrasena" type="password" required />
+        </div>
+
+        <div>
+            <label for="edad">Edad:</label>
+            <input id="edad" formControlName="edad" type="number" required />
+        </div>
+
+        <div>
+            <label for="telefono">Teléfono:</label>
+            <input id="telefono" formControlName="telefono" type="text" maxlength="15" required />
+        </div>
+
+        <div>
+            <label for="rol">Rol:</label>
+            <select id="rol" formControlName="rol" required>
+                <option value="administrador">Administrador</option>
+                <option value="usuario">Usuario</option>
+            </select>
+        </div>
+
+        <button type="submit" [disabled]="registerForm.invalid">Registrar</button>
+    </form>
+</div>
