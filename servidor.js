@@ -14,7 +14,7 @@ app.use(express.json());
 const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: 'Contraseña2190.', // Usa tu contraseña
+    password: 'root', // Usa tu contraseña
     database: 'cotizaciondb'
 });
 
@@ -141,6 +141,41 @@ app.get('/api/usuarios/:id', (req, res) => {
         }
     });
 });
+
+app.get('/api/bancos', (req, res) => {
+    // Consulta para obtener los nombres de los bancos sin duplicados
+    const query = 'SELECT DISTINCT nombre FROM bancos';
+
+    // Ejecutar la consulta
+    connection.query(query, (err, results) => {
+        if (err) {
+            console.error('Error al obtener datos de bancos:', err);
+            return res.status(500).json({ message: 'Error en el servidor' });
+        }
+
+        // Enviar los resultados al frontend
+        res.json(results);
+    });
+});
+
+app.get('/api/bancos/anios/:banco', (req, res) => {
+    const banco = req.params.banco;
+
+    // Consulta para obtener los años disponibles para el banco seleccionado
+    const query = 'SELECT DISTINCT anios FROM bancos WHERE nombre = ?';
+
+    // Ejecutar la consulta
+    connection.query(query, [banco], (err, results) => {
+        if (err) {
+            console.error('Error al obtener los años de banco:', err);
+            return res.status(500).json({ message: 'Error en el servidor' });
+        }
+
+        // Enviar los resultados al frontend
+        res.json(results.map(row => row.anios));  // Solo devuelve el array de años
+    });
+});
+
 
 // Iniciar el servidor en el puerto 3000
 const PORT = 3000;
