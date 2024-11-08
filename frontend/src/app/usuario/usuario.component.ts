@@ -8,11 +8,16 @@ import { HttpClient } from '@angular/common/http';
 })
 export class UsuarioComponent implements OnInit {
   selectedOption: string = '';
-  bancos: any[] = []; // Lista de bancos con todos los datos
-  anios: string[] = []; // Años disponibles para el banco seleccionado
-  interes: number = 0; // Interés seleccionado
-  enganche: number = 0; // Enganche seleccionado
-  bancoSeleccionado: string = ''; // Banco seleccionado
+  bancos: any[] = [];
+  anios: string[] = [];
+  interes: number = 0;
+  enganche: number = 0;
+  bancoSeleccionado: string = '';
+  sueldo: number = 0;
+  anioSeleccionado: number | null = null;
+  resultadoPrestamo: number | null = null;
+  engancheCalculado: number | null = null;
+  mensualidad: number | null = null;  // Nueva variable para almacenar la mensualidad
 
   constructor(private http: HttpClient) {}
 
@@ -20,7 +25,6 @@ export class UsuarioComponent implements OnInit {
     this.obtenerBancos();
   }
 
-  // Obtener bancos completos desde la API
   obtenerBancos() {
     this.http.get<any[]>('http://localhost:3000/api/bancos').subscribe(
       (response) => {
@@ -32,12 +36,10 @@ export class UsuarioComponent implements OnInit {
     );
   }
 
-  // Banco seleccionado
   onBancoSeleccionado(event: Event): void {
     const select = event.target as HTMLSelectElement;
     this.bancoSeleccionado = select.value;
 
-    // Obtener los años disponibles para el banco seleccionado
     this.http.get<string[]>(`http://localhost:3000/api/bancos/anios/${this.bancoSeleccionado}`).subscribe(
       (response) => {
         this.anios = response;
@@ -47,7 +49,6 @@ export class UsuarioComponent implements OnInit {
       }
     );
 
-    // Asigna interes y enganche del banco seleccionado
     const banco = this.bancos.find(b => b.nombre === this.bancoSeleccionado);
     if (banco) {
       this.interes = banco.interes;
@@ -55,13 +56,23 @@ export class UsuarioComponent implements OnInit {
     }
   }
 
-  // Año seleccionado
-  onAnioSeleccionado(event: Event): void {
-    const select = event.target as HTMLSelectElement;
-    const anioSeleccionado = select.value;
+  calcularPrestamo(anios: number | null) {
+    if (anios === null) return;
 
-    // No es necesario volver a buscar el banco, ya que el interés y enganche
-    // no dependen del año según este diseño de datos
+    const r = (this.interes / 100) / 12; // Tasa de interés mensual
+    const n = anios * 12; // Número total de pagos
+    const salarioPor40 = this.sueldo * 0.40;
+
+    // Cálculo del préstamo máximo usando la fórmula
+    this.resultadoPrestamo = (salarioPor40 * ((Math.pow((1 + r), n) - 1))) / (r * Math.pow((1 + r), n));
+
+    // Cálculo del enganche como porcentaje del monto del préstamo
+    if (this.resultadoPrestamo !== null) {
+      this.engancheCalculado = this.resultadoPrestamo * (this.enganche / 100);
+
+      // Cálculo de la mensualidad
+      this.mensualidad = this.resultadoPrestamo * (r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+    }
   }
 
   onOptionChange(event: Event) {
@@ -69,6 +80,7 @@ export class UsuarioComponent implements OnInit {
     this.selectedOption = target.value;
   }
 }
+
 
 
 

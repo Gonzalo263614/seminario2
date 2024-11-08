@@ -19,51 +19,75 @@
     </div>
 </form>
 
-<!-- Formulario para opción "sueldo" -->
 <div *ngIf="selectedOption === '1'" style="width: 50%; margin: 0 auto;">
     <h5 class="textos">Cotización en base a tu sueldo</h5>
     <form>
         <div style="width: 40%; margin: 0 auto;">
             <label for="sueldo">Sueldo:</label>
             <input id="suelInp" type="number" placeholder="$"
-                class="form-control" />
+                class="form-control" [(ngModel)]="sueldo" name="sueldo"/>
         </div>
         <div style="width: 30%; margin: 0 auto;">
-            <!-- Selector de banco -->
             <label for="banco">Selecciona el Banco:</label>
             <select id="banco" class="form-select"
                 (change)="onBancoSeleccionado($event)">
                 <option value selected disabled>Seleccione una opción</option>
-                <option *ngFor="let banco of bancos" [value]="banco.nombre">{{
-                    banco.nombre }}</option>
+                <option *ngFor="let banco of bancos" [value]="banco.nombre">{{ banco.nombre }}</option>
             </select>
 
-            <!-- Selector de años (solo muestra los años del banco seleccionado) -->
             <label for="anio">Selecciona los Años:</label>
-            <select class="form-select" (change)="onAnioSeleccionado($event)"
-                *ngIf="anios.length > 0">
-                <option *ngFor="let anio of anios" [value]="anio">{{ anio
-                    }}</option>
+            <select class="form-select" [(ngModel)]="anioSeleccionado" name="anioSeleccionado">
+                <option *ngFor="let anio of anios" [value]="anio">{{ anio }}</option>
             </select>
 
-            <!-- Mostrar interés y enganche fijos -->
             <div *ngIf="interes !== 0 && enganche !== 0">
                 <p>Interés: {{ interes }}%</p>
                 <p>Enganche: {{ enganche }}%</p>
             </div>
-        </div>
 
+            <button type="button" (click)="calcularPrestamo(anioSeleccionado)">Calcular Préstamo</button>
+        </div>
     </form>
+
+    <div *ngIf="resultadoPrestamo !== null && engancheCalculado !== null">
+        <p>Monto máximo del préstamo: {{ resultadoPrestamo | currency }}</p>
+        <p>Enganche: {{ engancheCalculado | currency }}</p>
+    </div>
+    <div *ngIf="mensualidad !== null">
+        <p>Mensualidad: {{ mensualidad | currency }}</p>
+    </div>
 </div>
 
-<!-- Formulario para opción "Two" -->
+  
+<!-- Formulario para opción de cotizacion casa -->
 <div *ngIf="selectedOption === '2'">
     <h3>Cotización en base valor de la casa</h3>
     <form>
-        <!-- Aquí van los campos del formulario de la segunda opción -->
-        <div>
-            <label for="input2">Campo para opción 2:</label>
-            <input id="input2" type="text" />
+        <div style="width: 40%; margin: 0 auto;">
+            <label for="casa">Costo de la casa:</label>
+            <input id="costocasa" type="number" placeholder="$"
+                class="form-control" />
         </div>
+        <div style="width: 30%; margin: 0 auto;">
+            <label for="banco">Selecciona el Banco:</label>
+            <select id="banco" class="form-select"
+                (change)="onBancoSeleccionado($event)">
+                <option value selected disabled>Seleccione una opción</option>
+                <option *ngFor="let banco of bancos" [value]="banco.nombre">{{ banco.nombre }}</option>
+            </select>
+
+            <label for="anio">Selecciona los Años:</label>
+            <select class="form-select" [(ngModel)]="anioSeleccionado" name="anioSeleccionado">
+                <option *ngFor="let anio of anios" [value]="anio">{{ anio }}</option>
+            </select>
+
+            <div *ngIf="interes !== 0 && enganche !== 0">
+                <p>Interés: {{ interes }}%</p>
+                <p>Enganche: {{ enganche }}%</p>
+            </div>
+
+            <button type="button" (click)="calcularPrestamo(anioSeleccionado)">Calcular Préstamo</button>
+        </div>
+        
     </form>
 </div>
