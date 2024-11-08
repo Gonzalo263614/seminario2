@@ -6,44 +6,53 @@
     integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
     crossorigin="anonymous">
 <form>
-    <select class="form-select" aria-label="Default select example"
-        (change)="onOptionChange($event)">
-        <option value selected disabled>Seleccione una opción</option>
-        <option value="1">Por sueldo</option>
-        <option value="2">Precio de la casa</option>
-    </select>
+    <h3 style="text-align: center; margin-top: 20px;">Bienvenido!</h3>
+    <h5 style="text-align: center; margin-top: 10px;">Selecciona la forma en la
+        que deseas cotizar</h5>
+    <div style="width: 50%; margin: 0 auto;">
+        <select class="form-select" aria-label="Default select example" style="width: 40%; margin: 0 auto; margin-top: 10px;"
+            (change)="onOptionChange($event)">
+            <option value selected disabled>Seleccione una opción</option>
+            <option value="1">Por sueldo</option>
+            <option value="2">Precio de la casa</option>
+        </select>
+    </div>
 </form>
 
 <!-- Formulario para opción "sueldo" -->
-<div *ngIf="selectedOption === '1'">
-    <h3>Cotización en base a tu sueldo</h3>
+<div *ngIf="selectedOption === '1'" style="width: 50%; margin: 0 auto;">
+    <h5 class="textos">Cotización en base a tu sueldo</h5>
     <form>
-        <div>
+        <div style="width: 40%; margin: 0 auto;">
             <label for="sueldo">Sueldo:</label>
             <input id="suelInp" type="number" placeholder="$"
                 class="form-control" />
         </div>
-        <div>
+        <div style="width: 30%; margin: 0 auto;">
             <!-- Selector de banco -->
             <label for="banco">Selecciona el Banco:</label>
-            <select id="banco" (change)="onBancoSeleccionado($event)">
-                <option *ngFor="let banco of bancos" [value]="banco.nombre">{{ banco.nombre }}</option>
+            <select id="banco" class="form-select"
+                (change)="onBancoSeleccionado($event)">
+                <option value selected disabled>Seleccione una opción</option>
+                <option *ngFor="let banco of bancos" [value]="banco.nombre">{{
+                    banco.nombre }}</option>
             </select>
-        
+
             <!-- Selector de años (solo muestra los años del banco seleccionado) -->
             <label for="anio">Selecciona los Años:</label>
-            <select (change)="onAnioSeleccionado($event)" *ngIf="anios.length > 0">
-                <option *ngFor="let anio of anios" [value]="anio">{{ anio }}</option>
+            <select class="form-select" (change)="onAnioSeleccionado($event)"
+                *ngIf="anios.length > 0">
+                <option *ngFor="let anio of anios" [value]="anio">{{ anio
+                    }}</option>
             </select>
-        
+
             <!-- Mostrar interés y enganche fijos -->
             <div *ngIf="interes !== 0 && enganche !== 0">
                 <p>Interés: {{ interes }}%</p>
                 <p>Enganche: {{ enganche }}%</p>
             </div>
         </div>
-        
-        
+
     </form>
 </div>
 
@@ -58,4 +67,3 @@
         </div>
     </form>
 </div>
-

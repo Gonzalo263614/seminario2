@@ -143,20 +143,18 @@ app.get('/api/usuarios/:id', (req, res) => {
 });
 
 app.get('/api/bancos', (req, res) => {
-    // Consulta para obtener los nombres de los bancos sin duplicados
-    const query = 'SELECT DISTINCT nombre FROM bancos';
+    // Consulta para obtener los datos completos de los bancos
+    const query = 'SELECT DISTINCT nombre, interes, enganche FROM bancos';
 
-    // Ejecutar la consulta
     connection.query(query, (err, results) => {
         if (err) {
             console.error('Error al obtener datos de bancos:', err);
             return res.status(500).json({ message: 'Error en el servidor' });
         }
-
-        // Enviar los resultados al frontend
         res.json(results);
     });
 });
+
 
 app.get('/api/bancos/anios/:banco', (req, res) => {
     const banco = req.params.banco;
