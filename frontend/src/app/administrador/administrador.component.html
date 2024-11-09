@@ -1,2 +1,143 @@
 <app-navbar-adm-usr></app-navbar-adm-usr>
-<p>administrador works!</p>
+
+<button (click)="toggleLista()">
+  {{ mostrarLista ? 'Ocultar Lista de Usuarios' : 'Mostrar Lista de Usuarios' }}
+</button>
+
+<div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+
+<div *ngIf="mostrarLista">
+  <div *ngIf="usuarios.length > 0">
+    <h2>Lista de Usuarios</h2>
+    <table class="user-table">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Apellido Paterno</th>
+          <th>Apellido Materno</th>
+          <th>RFC</th>
+          <th>CURP</th>
+          <th>Correo</th>
+          <th>Edad</th>
+          <th>Teléfono</th>
+          <th>Fecha de Alta</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let usuario of usuarios">
+          <td>{{ usuario.nombre }}</td>
+          <td>{{ usuario.apellido_paterno }}</td>
+          <td>{{ usuario.apellido_materno }}</td>
+          <td>{{ usuario.rfc }}</td>
+          <td>{{ usuario.curp }}</td>
+          <td>{{ usuario.correo }}</td>
+          <td>{{ usuario.edad }}</td>
+          <td>{{ usuario.telefono }}</td>
+          <td>{{ usuario.fecha_alta | date: 'short' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="usuarios.length === 0">
+    <p>No hay usuarios con rol de 'usuario' para mostrar.</p>
+  </div>
+</div>
+<!-- Botón para mostrar/ocultar la lista de bancos -->
+<button (click)="toggleBancos()">
+  {{ mostrarBancos ? 'Ocultar Lista de Bancos' : 'Mostrar Lista de Bancos' }}
+</button>
+
+<div *ngIf="errorMessageBancos" class="error-message">{{ errorMessageBancos }}</div>
+
+<div *ngIf="mostrarBancos">
+  <div *ngIf="bancos.length > 0">
+    <h2>Lista de Bancos</h2>
+    <table class="bank-table">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Interés</th>
+          <th>Años</th>
+          <th>Enganche</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let banco of bancos">
+          <td>{{ banco.nombre }}</td>
+          <td>
+            <span *ngIf="!banco.editando">{{ banco.interes }}%</span>
+            <input *ngIf="banco.editando" [(ngModel)]="banco.interes" type="number" step="0.01" min="0" />
+          </td>
+          <td>
+            <span *ngIf="!banco.editando">{{ banco.anios }}</span>
+            <select *ngIf="banco.editando" [(ngModel)]="banco.anios">
+              <option value="10">10</option>
+              <option value="15">15</option>
+              <option value="20">20</option>
+            </select>
+          </td>
+          <td>
+            <span *ngIf="!banco.editando">{{ banco.enganche }}%</span>
+            <input *ngIf="banco.editando" [(ngModel)]="banco.enganche" type="number" step="0.1" min="0" max="100" />
+          </td>
+          <td>
+            <button *ngIf="!banco.editando" (click)="habilitarEdicion(banco)">Modificar</button>
+            <button *ngIf="banco.editando" (click)="guardarCambios(banco)">Guardar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="bancos.length === 0">
+    <p>No hay bancos disponibles para mostrar.</p>
+  </div>
+</div>
+
+<button (click)="togglePrestamos()">
+  {{ mostrarPrestamos ? 'Ocultar Lista de Préstamos' : 'Mostrar Lista de Préstamos' }}
+</button>
+
+<div *ngIf="errorMessagePrestamos" class="error-message">{{ errorMessagePrestamos }}</div>
+
+<div *ngIf="mostrarPrestamos">
+  <div *ngIf="prestamos.length > 0">
+    <h2>Lista de Préstamos</h2>
+    <table class="loan-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Usuario</th>
+          <th>Banco</th>
+          <th>Costo Casa</th>
+          <th>Enganche</th>
+          <th>Monto Préstamo</th>
+          <th>Mensualidad</th>
+          <th>Interés</th>
+          <th>Plazo (años)</th>
+          <th>Fecha Creación</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let prestamo of prestamos">
+          <td>{{ prestamo.id }}</td>
+          <td>{{ prestamo.nombre_usuario }}</td> 
+          <td>{{ prestamo.nombre_banco }}</td>
+          <td>{{ prestamo.costo_casa | currency }}</td>
+          <td>{{ prestamo.enganche | currency }}</td>
+          <td>{{ prestamo.monto_prestamo | currency }}</td>
+          <td>{{ prestamo.mensualidad | currency }}</td>
+          <td>{{ prestamo.interes }}%</td>
+          <td>{{ prestamo.plazo_anios }}</td>
+          <td>{{ prestamo.fecha_creacion | date: 'short' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="prestamos.length === 0">
+    <p>No hay préstamos disponibles para mostrar.</p>
+  </div>
+</div>

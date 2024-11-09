@@ -1,17 +1,14 @@
 <app-navbar-adm-usr></app-navbar-adm-usr>
 
-<link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
-    rel="stylesheet"
-    integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
-    crossorigin="anonymous">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
 <form>
     <h3 style="text-align: center; margin-top: 20px;">Bienvenido!</h3>
     <h5 style="text-align: center; margin-top: 10px;">Selecciona la forma en la
         que deseas cotizar</h5>
     <div style="width: 50%; margin: 0 auto;">
-        <select class="form-select" aria-label="Default select example" style="width: 40%; margin: 0 auto; margin-top: 10px;"
-            (change)="onOptionChange($event)">
+        <select class="form-select" aria-label="Default select example"
+            style="width: 40%; margin: 0 auto; margin-top: 10px;" (change)="onOptionChange($event)">
             <option value selected disabled>Seleccione una opción</option>
             <option value="1">Por sueldo</option>
             <option value="2">Precio de la casa</option>
@@ -24,13 +21,11 @@
     <form>
         <div style="width: 40%; margin: 0 auto;">
             <label for="sueldo">Sueldo:</label>
-            <input id="suelInp" type="number" placeholder="$"
-                class="form-control" [(ngModel)]="sueldo" name="sueldo"/>
+            <input id="suelInp" type="number" placeholder="$" class="form-control" [(ngModel)]="sueldo" name="sueldo" />
         </div>
         <div style="width: 30%; margin: 0 auto;">
             <label for="banco">Selecciona el Banco:</label>
-            <select id="banco" class="form-select"
-                (change)="onBancoSeleccionado($event)">
+            <select id="banco" class="form-select" (change)="onBancoSeleccionado($event)">
                 <option value selected disabled>Seleccione una opción</option>
                 <option *ngFor="let banco of bancos" [value]="banco.nombre">{{ banco.nombre }}</option>
             </select>
@@ -56,22 +51,23 @@
     <div *ngIf="mensualidad !== null">
         <p>Mensualidad: {{ mensualidad | currency }}</p>
     </div>
+    <!-- Botón para guardar los datos del préstamo calculado -->
+    <button *ngIf="resultadoPrestamo !== null && engancheCalculado !== null" type="button"
+        (click)="guardarPrestamoSueldo()">Guardar</button>
 </div>
 
-  
+
 <!-- Formulario para opción de cotizacion casa -->
 <div *ngIf="selectedOption === '2'">
     <h3>Cotización en base valor de la casa</h3>
     <form>
         <div style="width: 40%; margin: 0 auto;">
             <label for="casa">Costo de la casa:</label>
-            <input id="costocasa" type="number" placeholder="$"
-                class="form-control" />
+            <input id="costocasa" type="number" placeholder="$" class="form-control" />
         </div>
         <div style="width: 30%; margin: 0 auto;">
             <label for="banco">Selecciona el Banco:</label>
-            <select id="banco" class="form-select"
-                (change)="onBancoSeleccionado($event)">
+            <select id="banco" class="form-select" (change)="onBancoSeleccionado($event)">
                 <option value selected disabled>Seleccione una opción</option>
                 <option *ngFor="let banco of bancos" [value]="banco.nombre">{{ banco.nombre }}</option>
             </select>
@@ -86,8 +82,17 @@
                 <p>Enganche: {{ enganche }}%</p>
             </div>
 
-            <button type="button" (click)="calcularPrestamo(anioSeleccionado)">Calcular Préstamo</button>
+            <button type="button" (click)="calcularPrestamoCasa(anioSeleccionado)">Calcular Préstamo</button>
         </div>
-        
     </form>
+    <div *ngIf="resultadoPrestamo !== null && engancheCalculado !== null">
+        <p>Monto máximo del préstamo: {{ resultadoPrestamo | currency }}</p>
+        <p>Enganche: {{ engancheCalculado | currency }}</p>
+    </div>
+    <div *ngIf="mensualidad !== null">
+        <p>Mensualidad: {{ mensualidad | currency }}</p>
+    </div>
+    <!-- Botón para guardar los datos del préstamo calculado -->
+    <button *ngIf="resultadoPrestamo !== null && engancheCalculado !== null" type="button"
+        (click)="guardarPrestamoCasa()">Guardar</button>
 </div>

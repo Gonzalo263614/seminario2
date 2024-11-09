@@ -14,7 +14,7 @@ app.use(express.json());
 const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: 'root', // Usa tu contraseña
+    password: 'Contraseña2190.', // Usa tu contraseña
     database: 'cotizaciondb'
 });
 
@@ -174,6 +174,116 @@ app.get('/api/bancos/anios/:banco', (req, res) => {
     });
 });
 
+// Ruta para guardar los datos del préstamo
+app.post('/api/prestamos', (req, res) => {
+    console.log("Datos recibidos en el servidor:", req.body);  // Verifica qué datos está recibiendo el servidor
+
+    const {
+        id_usuario,
+        nombre_banco,
+        costo_casa,
+        enganche,
+        monto_prestamo,
+        mensualidad,
+        interes,
+        plazo_anios,
+        fecha_creacion
+    } = req.body;
+
+    // Validar que los datos necesarios están presentes
+    if (!id_usuario || !nombre_banco || !costo_casa || !enganche || !monto_prestamo || !mensualidad || !interes || !plazo_anios || !fecha_creacion) {
+        return res.status(400).json({ message: 'Faltan datos necesarios' });
+    }
+
+    // Validar que el valor de `plazo_anios` esté dentro de los valores permitidos
+    if (!['10', '15', '20'].includes(plazo_anios)) {
+        return res.status(400).json({ message: 'El plazo de años debe ser uno de los siguientes: 10, 15, 20' });
+    }
+
+    // Consulta SQL para insertar los datos en la tabla `prestamos`
+    const query = `
+        INSERT INTO prestamos 
+        (id_usuario, nombre_banco, costo_casa_sueldo, enganche, monto_prestamo, mensualidad, interes, plazo_anios, fecha_creacion)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `;
+
+    const values = [
+        id_usuario,
+        nombre_banco,
+        costo_casa,
+        enganche,
+        monto_prestamo,
+        mensualidad,
+        interes,
+        plazo_anios,
+        fecha_creacion
+    ];
+
+    // Ejecutar la consulta SQL
+    connection.query(query, values, (err, result) => {
+        if (err) {
+            console.error('Error al guardar el préstamo:', err);
+            return res.status(500).json({ message: 'Error al guardar el préstamo' });
+        }
+
+        // Respuesta exitosa
+        console.log('Préstamo guardado con éxito:', result);
+        res.status(201).json({ message: 'Préstamo guardado con éxito', data: result });
+    });
+});
+
+// Ruta para obtener usuarios con rol 'usuario'
+app.get('/api/usuarios', (req, res) => {
+    const query = 'SELECT * FROM usuarios WHERE rol = "usuario"';
+    connection.query(query, (error, results) => {
+        if (error) {
+            console.error('Error al obtener usuarios:', error);
+            res.status(500).json({ error: 'Error al obtener los usuarios' });
+        } else {
+            res.json(results);
+        }
+    });
+});
+// Ruta para obtener la lista de bancos
+app.get('/api/bancosMostrar', (req, res) => {
+    const query = `SELECT * FROM bancos`;
+
+    connection.query(query, (err, results) => {
+        if (err) {
+            console.error('Error al obtener los bancos:', err);
+            return res.status(500).json({ message: 'Error al obtener los bancos' });
+        }
+        // Enviar los resultados al frontend
+        res.status(200).json(results);
+    });
+});
+// Ruta para actualizar un banco
+app.put('/api/bancos/:id', (req, res) => {
+    const { id } = req.params;
+    const { interes, anios, enganche } = req.body;
+
+    const query = `UPDATE bancos SET interes = ?, anios = ?, enganche = ? WHERE id = ?`;
+    connection.query(query, [interes, anios, enganche, id], (err, result) => {
+        if (err) {
+            console.error('Error al actualizar el banco:', err);
+            return res.status(500).json({ message: 'Error al actualizar el banco' });
+        }
+        res.status(200).json({ message: 'Banco actualizado con éxito' });
+    });
+});
+// Ruta para obtener todas las cotizaciones de préstamos
+app.get('/api/prestamos', (req, res) => {
+    const query = `SELECT * FROM prestamos`;
+
+    connection.query(query, (err, results) => {
+        if (err) {
+            console.error('Error al obtener los bancos:', err);
+            return res.status(500).json({ message: 'Error al obtener los bancos' });
+        }
+        // Enviar los resultados al frontend
+        res.status(200).json(results);
+    });
+});
 
 // Iniciar el servidor en el puerto 3000
 const PORT = 3000;
