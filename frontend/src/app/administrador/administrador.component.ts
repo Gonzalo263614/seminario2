@@ -46,7 +46,26 @@ export class AdministradorComponent implements OnInit {
   cargarBancos() {
     this.http.get<any[]>('http://localhost:3000/api/bancosMostrar').subscribe(
       (data) => {
-        this.bancos = data;
+        // Definir el tipo de los bancos
+        interface Banco {
+          id: number;
+          nombre: string;
+          interes: number;
+          anios: number;
+          enganche: number;
+          editando?: boolean;
+        }
+
+        // Filtramos los bancos para que solo se muestren los primeros con cada nombre único
+        const bancosUnicos: Banco[] = [];  // Declaramos el tipo explícitamente
+
+        data.forEach((banco) => {
+          if (!bancosUnicos.some((b) => b.nombre === banco.nombre)) {
+            bancosUnicos.push(banco);
+          }
+        });
+
+        this.bancos = bancosUnicos; // Asignamos los bancos únicos
       },
       (error) => {
         this.errorMessageBancos = 'Error al cargar los bancos';
@@ -64,12 +83,22 @@ export class AdministradorComponent implements OnInit {
   }
 
   guardarCambios(banco: any) {
+    // No se modifica el campo de años en el backend, ya que es fijo
     this.http.put(`http://localhost:3000/api/bancos/${banco.id}`, {
       interes: banco.interes,
-      anios: banco.anios,
-      enganche: banco.enganche
+      enganche: banco.enganche,
+      nombre: banco.nombre  // Enviamos solo los campos que queremos actualizar
     }).subscribe(
       () => {
+        // Actualizamos todos los bancos con el mismo nombre en el frontend
+        this.bancos.forEach((b) => {
+          if (b.nombre === banco.nombre) {
+            b.interes = banco.interes;
+            b.enganche = banco.enganche;
+            // No actualizamos el campo "anios" aquí
+          }
+        });
+
         banco.editando = false;
         alert('Cambios guardados con éxito.');
       },
