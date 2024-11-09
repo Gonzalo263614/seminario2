@@ -18,6 +18,7 @@ export class UsuarioComponent implements OnInit {
   resultadoPrestamo: number | null = null;
   engancheCalculado: number | null = null;
   mensualidad: number | null = null;  // Nueva variable para almacenar la mensualidad
+  montoapagar: number | null = null;  // Nueva variable para almacenar la mensualidad
 
   constructor(private http: HttpClient) { }
 
@@ -72,6 +73,7 @@ export class UsuarioComponent implements OnInit {
 
       // Cálculo de la mensualidad
       this.mensualidad = this.resultadoPrestamo * (r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+      this.montoapagar = this.mensualidad * n;
     }
   }
   calcularPrestamoCasa(anios: number | null) {
@@ -94,6 +96,7 @@ export class UsuarioComponent implements OnInit {
 
     // Cálculo de la mensualidad usando la fórmula de la imagen
     this.mensualidad = this.resultadoPrestamo * (r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+    this.montoapagar = this.mensualidad * n;
   }
 
   onOptionChange(event: Event) {

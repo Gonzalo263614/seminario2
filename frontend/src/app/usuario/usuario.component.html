@@ -51,6 +51,9 @@
     <div *ngIf="mensualidad !== null">
         <p>Mensualidad: {{ mensualidad | currency }}</p>
     </div>
+    <div *ngIf="montoapagar !== null">
+        <p>Monto a Pagar: {{ montoapagar | currency }}</p>
+    </div>
     <!-- Botón para guardar los datos del préstamo calculado -->
     <button *ngIf="resultadoPrestamo !== null && engancheCalculado !== null" type="button"
         (click)="guardarPrestamoSueldo()">Guardar</button>
@@ -91,6 +94,9 @@
     </div>
     <div *ngIf="mensualidad !== null">
         <p>Mensualidad: {{ mensualidad | currency }}</p>
+    </div>
+    <div *ngIf="montoapagar !== null">
+        <p>Monto a Pagar: {{ montoapagar | currency }}</p>
     </div>
     <!-- Botón para guardar los datos del préstamo calculado -->
     <button *ngIf="resultadoPrestamo !== null && engancheCalculado !== null" type="button"

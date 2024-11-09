@@ -245,32 +245,57 @@ app.get('/api/usuarios', (req, res) => {
     });
 });
 // Ruta para obtener la lista de bancos
+// Ruta para cargar los bancos
 app.get('/api/bancosMostrar', (req, res) => {
-    const query = `SELECT * FROM bancos`;
-
-    connection.query(query, (err, results) => {
+    const query = 'SELECT * FROM bancos';
+    connection.query(query, (err, result) => {
         if (err) {
             console.error('Error al obtener los bancos:', err);
             return res.status(500).json({ message: 'Error al obtener los bancos' });
         }
-        // Enviar los resultados al frontend
-        res.status(200).json(results);
+
+        // Asignar los valores de años según el banco
+        result.forEach(banco => {
+            if (banco.nombre === 'BBVA') {
+                banco.anios = [10, 15, 20];  // Solo estos años para BBVA
+            } else if (banco.nombre === 'HSBC') {
+                banco.anios = [10, 20];  // Solo estos años para HSBC
+            } else if (banco.nombre === 'INFONAVIT') {
+                banco.anios = [10, 15];  // Solo estos años para INFONAVIT
+            } else {
+                banco.anios = [10, 15];  // Valor predeterminado para otros bancos
+            }
+        });
+
+        res.json(result);
     });
 });
+
 // Ruta para actualizar un banco
 app.put('/api/bancos/:id', (req, res) => {
     const { id } = req.params;
-    const { interes, anios, enganche } = req.body;
+    const { interes, enganche, nombre } = req.body;  // No incluimos "anios" en el body
 
-    const query = `UPDATE bancos SET interes = ?, anios = ?, enganche = ? WHERE id = ?`;
-    connection.query(query, [interes, anios, enganche, id], (err, result) => {
+    // Primero actualizamos el banco con el ID dado
+    const query = `UPDATE bancos SET interes = ?, enganche = ? WHERE id = ?`;
+    connection.query(query, [interes, enganche, id], (err, result) => {
         if (err) {
             console.error('Error al actualizar el banco:', err);
             return res.status(500).json({ message: 'Error al actualizar el banco' });
         }
-        res.status(200).json({ message: 'Banco actualizado con éxito' });
+
+        // Luego, actualizamos todos los bancos con el mismo nombre
+        const updateAllQuery = `UPDATE bancos SET interes = ?, enganche = ? WHERE nombre = ?`;
+        connection.query(updateAllQuery, [interes, enganche, nombre], (err, result) => {
+            if (err) {
+                console.error('Error al actualizar bancos con el mismo nombre:', err);
+                return res.status(500).json({ message: 'Error al actualizar los bancos con el mismo nombre' });
+            }
+            res.status(200).json({ message: 'Banco actualizado con éxito' });
+        });
     });
 });
+
 // Ruta para obtener todas las cotizaciones de préstamos
 app.get('/api/prestamos', (req, res) => {
     const query = `SELECT * FROM prestamos`;
