@@ -123,5 +123,24 @@ export class AdministradorComponent implements OnInit {
   togglePrestamos() {
     this.mostrarPrestamos = !this.mostrarPrestamos;
   }
+  eliminarUsuario(id: number) {
+    // Confirmar la eliminación
+    const confirmacion = window.confirm('¿Estás seguro de que deseas eliminar este usuario?');
+    
+    if (confirmacion) {
+      // Hacer la solicitud HTTP para eliminar el usuario
+      this.http.delete(`http://localhost:3000/api/usuarios/${id}`).subscribe(
+        () => {
+          // Eliminar el usuario de la lista en el frontend
+          this.usuarios = this.usuarios.filter(usuario => usuario.id !== id);
+          alert('Usuario eliminado con éxito.');
+        },
+        (error) => {
+          console.error('Error al eliminar el usuario:', error);
+          alert('Hubo un error al eliminar el usuario.');
+        }
+      );
+    }
+  }
 }
 

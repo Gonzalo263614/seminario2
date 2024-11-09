@@ -14,7 +14,7 @@ app.use(express.json());
 const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: 'root', // Usa tu contraseña
+    password: 'Contraseña2190.', // Usa tu contraseña
     database: 'cotizaciondb'
 });
 
@@ -302,13 +302,76 @@ app.get('/api/prestamos', (req, res) => {
 
     connection.query(query, (err, results) => {
         if (err) {
-            console.error('Error al obtener los bancos:', err);
-            return res.status(500).json({ message: 'Error al obtener los bancos' });
+            console.error('Error al obtener los préstamos:', err);
+            return res.status(500).json({ message: 'Error al obtener los préstamos' });
         }
-        // Enviar los resultados al frontend
         res.status(200).json(results);
     });
 });
+
+// Ruta para obtener las cotizaciones de préstamos de un usuario específico
+app.get('/api/prestamos/usuario/:userId', (req, res) => {
+    const userId = req.params.userId;
+    const query = 'SELECT * FROM prestamos WHERE id_usuario = ?';
+    connection.query(query, [userId], (error, results) => {
+        if (error) {
+            console.error('Error al obtener las cotizaciones:', error);
+            res.status(500).json({ error: 'Error al obtener las cotizaciones' });
+        } else {
+            res.json(results);
+        }
+    });
+});
+
+app.delete('/api/usuarios/:id', (req, res) => {
+    const { id } = req.params;
+
+    // Iniciar la transacción
+    connection.beginTransaction((err) => {
+        if (err) {
+            console.error('Error al iniciar la transacción:', err);
+            return res.status(500).json({ message: 'Error al iniciar la transacción' });
+        }
+
+        // Eliminar los registros en la tabla 'prestamos' que tienen el id_usuario correspondiente
+        const deletePrestamosQuery = 'DELETE FROM prestamos WHERE id_usuario = ?';
+        connection.query(deletePrestamosQuery, [id], (err, result) => {
+            if (err) {
+                return connection.rollback(() => {
+                    console.error('Error al eliminar los préstamos:', err);
+                    res.status(500).json({ message: 'Error al eliminar los préstamos' });
+                });
+            }
+
+            // Eliminar el usuario de la tabla 'usuarios'
+            const deleteUsuarioQuery = 'DELETE FROM usuarios WHERE id = ?';
+            connection.query(deleteUsuarioQuery, [id], (err, result) => {
+                if (err) {
+                    return connection.rollback(() => {
+                        console.error('Error al eliminar el usuario:', err);
+                        res.status(500).json({ message: 'Error al eliminar el usuario' });
+                    });
+                }
+
+                // Si todo fue exitoso, hacer commit de la transacción
+                connection.commit((err) => {
+                    if (err) {
+                        return connection.rollback(() => {
+                            console.error('Error al hacer commit de la transacción:', err);
+                            res.status(500).json({ message: 'Error al hacer commit de la transacción' });
+                        });
+                    }
+
+                    // Responder con éxito (en formato JSON)
+                    res.status(200).json({ message: 'Usuario y préstamos eliminados' });
+                });
+            });
+        });
+    });
+});
+
+
+
 
 // Iniciar el servidor en el puerto 3000
 const PORT = 3000;

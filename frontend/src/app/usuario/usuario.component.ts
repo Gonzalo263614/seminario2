@@ -19,7 +19,8 @@ export class UsuarioComponent implements OnInit {
   engancheCalculado: number | null = null;
   mensualidad: number | null = null;  // Nueva variable para almacenar la mensualidad
   montoapagar: number | null = null;  // Nueva variable para almacenar la mensualidad
-
+  prestamosUsuario: any[] = []; // Cotizaciones del usuario actual
+  mostrarPrestamos: boolean = false; // Control para mostrar/ocultar cotizaciones
   constructor(private http: HttpClient) { }
 
   ngOnInit() {
@@ -187,6 +188,31 @@ export class UsuarioComponent implements OnInit {
       (error) => {
         console.error('Error al guardar el préstamo:', error);
         alert('Error al guardar el préstamo.');
+      }
+    );
+  }
+  // Método para alternar la visibilidad de las cotizaciones
+  togglePrestamosUsuario() {
+    this.mostrarPrestamos = !this.mostrarPrestamos;
+    if (this.mostrarPrestamos) {
+      this.obtenerCotizacionesUsuario();
+    }
+  }
+
+  // Método para obtener las cotizaciones del usuario actual
+  obtenerCotizacionesUsuario() {
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
+      console.error('Usuario no encontrado en localStorage');
+      return;
+    }
+
+    this.http.get<any[]>(`http://localhost:3000/api/prestamos/usuario/${userId}`).subscribe(
+      (response) => {
+        this.prestamosUsuario = response;
+      },
+      (error) => {
+        console.error('Error al obtener las cotizaciones:', error);
       }
     );
   }
